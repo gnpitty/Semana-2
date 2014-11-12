@@ -9,6 +9,7 @@ library (ggplot2)
 
 DT <- data.table(NEI)
 baltimoreCity <- filter(DT,fips == "24510")
+laCity        <- filter(DT,fips == "06037")
 
 total    <- DT[, sum(Emissions), by = year]
 totalBC <- baltimoreCity[, sum(Emissions), by = year]
@@ -33,10 +34,16 @@ qplot(Year,Emissions, data=totalCoal  ,main="US Emissions coal combustion-relate
 
 
 vehiclesSCC <- SCC[grep ("Vehicles$",SCC$EI.Sector ),]
+
 vehiclesMerge <- merge(vehiclesSCC,baltimoreCity,by= "SCC")
 totalvehicles<- aggregate(vehiclesMerge$Emissions, by=list(vehiclesMerge$type,vehiclesMerge$year), FUN=sum)
 colnames(totalvehicles)=c("Type","Year","Emissions")
 qplot(Year,Emissions, data=totalvehicles  ,main="Baltimore Emissions vehicles ",ylab="Emissions",xlab="Year",facets=.~Type )
 
+vehiclesMergeLA  <- merge(vehiclesSCC,laCity,by= "SCC")
+totalvehiclesLA<- aggregate(vehiclesMergeLA$Emissions, by=list(vehiclesMergeLA$type,vehiclesMergeLA$year), FUN=sum)
+colnames(totalvehiclesLA)=c("Type","Year","Emissions")
+
+qplot(Year,Emissions, data=totalvehiclesLA  ,main="Los Angeles Emissions vehicles ",ylab="Emissions",xlab="Year",facets=.~Type )
 
 
